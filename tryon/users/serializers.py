@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
+from .models import UploadedImage
 
 User = get_user_model()
 
@@ -33,7 +34,7 @@ class PasswordResetSerializer(serializers.Serializer):
         send_mail(
             "Password Reset Request",
             f"Click the link below to reset your password:\n{reset_url}",
-            "clintoodavi01@gmail.com",  # Replace with your email
+            "clintoodavi@gmail.com",  # Replace with your email
             [email],
             fail_silently=False,
         )
@@ -50,3 +51,11 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
     def save(self, user):
         user.set_password(self.validated_data['new_password'])
         user.save()
+        
+
+
+class ImageUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UploadedImage
+        fields = ['id', 'user', 'image', 'uploaded_at']
+        read_only_fields = ['id', 'user', 'uploaded_at']

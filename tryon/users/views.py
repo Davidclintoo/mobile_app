@@ -12,6 +12,13 @@ from django.shortcuts import get_object_or_404
 from .serializers import UserProfileSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import CreateAPIView
+from .models import UploadedImage
+from .serializers import ImageUploadSerializer
 
 User = get_user_model()
 
@@ -119,3 +126,19 @@ class VerifyEmail(APIView):
         user.save()
 
         return Response({"message": "Email verified successfully. You can now log in."}, status=200)
+    
+class GoogleLoginView(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    client_class = OAuth2Client
+    # Optionally, set a callback_url if needed
+    callback_url = "http://localhost:8000/accounts/google/login/callback/"
+
+
+class ImageUploadView(CreateAPIView):
+    queryset = UploadedImage.objects.all()
+    serializer_class = ImageUploadSerializer
+    permission_classes = [IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

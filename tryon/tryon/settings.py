@@ -26,10 +26,43 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.facebook',
+    'dj_rest_auth',
+    
+    'rest_framework.authtoken',
     'rest_framework',
+    'dj_rest_auth.registration',
     'rest_framework_simplejwt',
+    'social_django',
     'users',
+    
 ]
+SITE_ID = 1
+
+REST_USE_JWT = True  # Use JWT tokens for authentication
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# Social Auth Keys (Replace with your credentials)
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "your-google-client-id"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "your-google-client-secret"
+
+SOCIAL_AUTH_FACEBOOK_KEY = "your-facebook-app-id"
+SOCIAL_AUTH_FACEBOOK_SECRET = "your-facebook-app-secret"
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -42,7 +75,8 @@ REST_FRAMEWORK = {
     ],
 }
 
-AUTH_USER_MODEL = 'users.CustomUser'
+
+AUTH_USER_MODEL ='users.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -52,6 +86,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'tryon.urls'
@@ -133,6 +168,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'clintoodavi01@gmail.com'  # Replace with your Gmail
-EMAIL_HOST_PASSWORD = 'david12'  # Replace with your App Password
+EMAIL_HOST_PASSWORD = '1234'  # Replace with your App Password
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
